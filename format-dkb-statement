@@ -1,0 +1,21 @@
+#!/bin/bash
+# Convert DKB bank statements to readable .csv file for hledger
+# $1 input file name
+# $2 output file name
+
+# TODO: Add option to pass output to stdout instead of creating a new file
+# TODO: Sort based on Date
+
+sed '1,6d' $1 | iconv -f ISO-8859-3 -t UTF-8 -o $2 # remove the first 6 lines and conver latin to UTF-8 encoding
+
+sed -i 's/\"\([0-9]\{2\}\).\([0-9]\{2\}\).\([0-9]\{4\}\)\"/\"\3\\\2\\\1\"/g' $2 # change the date format from 23.04.2022 to 2022/04/23
+
+sed -r -i 's/,([0-9]{1,2})\b/\.\1/g' $2 # change commas to dots in floats
+sed -i 's/,/ /g' $2 # replace commas with spaces
+sed -i 's/\t/ /g' $2 # replace tabs with spaces
+sed -i 's/  */ /g' $2 # replace multiple spaces with one
+sed -i 's/;/,/g' $2 # replace semicols with commas
+sed -i 's/NOTPROVIDED//g' $2 # remove keyword
+
+cat $2
+
