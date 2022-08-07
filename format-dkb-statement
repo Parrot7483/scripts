@@ -3,6 +3,7 @@
 # $1 input file name
 # $2 output file name
 
+# TODO: Remove dots from big numbers. 1.200,00 should be 1200.00
 # TODO: Add option to pass output to stdout instead of creating a new file
 # TODO: Sort based on Date
 
@@ -20,6 +21,7 @@ sed -r -i 's/,([0-9]{1,2})\b/\.\1/g' $2 # change commas to dots in floats
 sed -i 's/,/ /g' $2 # replace commas with spaces
 sed -i 's/\t/ /g' $2 # replace tabs with spaces
 sed -i 's/  */ /g' $2 # replace multiple spaces with one
+sed -i 's/\.\.*/./g' $2 # replace multiple dots with one
 sed -i 's/;/,/g' $2 # replace semicols with commas
 sed -i 's/NOTPROVIDED//g' $2 # remove keyword
 
