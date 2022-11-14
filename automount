@@ -28,7 +28,7 @@ fi
 
 # Test if folder is mounted
 test_mountpoint () {
-	if [[ "$(ls -l /mnt/spacefolder | head -n 1 | awk '{print $2}')" == "0" ]]
+	if [[ "$(ls -l $MNT_PNT | head -n 1 | awk '{print $2}')" == "0" ]]
 	then
 		return 1 
 	else
