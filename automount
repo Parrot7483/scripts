@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # automount - Connecting to a NAS local and remote
 
 # This script mounts a directory via sshfs. 
@@ -28,12 +28,18 @@ fi
 
 # Test if folder is mounted
 test_mountpoint () {
-	findmnt $MNT_PNT &> /dev/null
+	if [[ "$(ls -l /mnt/spacefolder | head -n 1 | awk '{print $2}')" == "0" ]]
+	then
+		return 1 
+	else
+		return 0
+	fi
 }
 
 # Mount locally
 mount_local () {
-	sshfs $USERNAME@$HOST_LOCAL:$PATH_SERVER $MNT_PNT -o ServerAliveInterval=1,ServerAliveCountMax=15 -p $PORT_LOCAL &> /dev/null
+# 	sshfs $USERNAME@$HOST_LOCAL:$PATH_SERVER $MNT_PNT -o ServerAliveInterval=1,ServerAliveCountMax=15 -p $PORT_LOCAL &> /dev/null
+ 	sshfs $USERNAME@$HOST_LOCAL:$PATH_SERVER $MNT_PNT -o ServerAliveInterval=1,ServerAliveCountMax=15 -p $PORT_LOCAL
 }
 
 # Mount remote
@@ -43,7 +49,12 @@ mount_remote () {
 
 case $1 in 
 	"remote")
-		if mount_remote && test_mountpoint ; then
+		if test_mountpoint
+		then 
+			echo "Already mounted"
+			exit 1
+		elif mount_remote && test_mountpoint
+		then
 				echo "Mounted $DIRNAME remotely"
 				exit 0
 		else 
@@ -52,7 +63,12 @@ case $1 in
 		fi
 		;;
 	"local")
-		if mount_local && test_mountpoint ; then
+		if test_mountpoint
+		then 
+			echo "Already mounted"
+			exit 1
+		elif mount_local && test_mountpoint
+		then
 				echo "Mounted $DIRNAME locally"
 				exit 0
 		else 
@@ -62,6 +78,15 @@ case $1 in
 		;;
 	"umount")
 		umount $MNT_PNT
+		exit 0
+		;;
+	"test") 
+		if test_mountpoint
+		then 
+			echo "Mounted"
+		else
+			echo "Not Mounted"
+		fi
 		exit 0
 		;;
 	"show-config")
