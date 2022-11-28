@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# A wrapper around du to get the total size of a single or multiple directories.
+# Passes more arguments to du
+
+du --total --summarize --dereference --human-readable $@ | tail -n 1 | awk '{print $1}'
