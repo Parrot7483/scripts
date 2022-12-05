@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # A version of ls (list directory contents) that hides files of a directory listed in a .hidden file
 # Set -a or --all to show hidden files
 
@@ -10,17 +10,19 @@ show_hidden=0
 for i; do
 	if [[ "$i" =~ ^-([b-z]|[A-Z])*a([b-z]|[A-Z])* ]] || [ $i == "--all" ]; then
 		show_hidden=1
+		break
 	fi
-
-	options+="$i "
 done
 
 # If .hidden file exists and --all option is not set append ignore options
 if [ -f ".hidden" ] && [ "$show_hidden" -eq "0" ]; then
 	for line in $(cat .hidden); do
-		options+="--ignore=$line "
+		ignores+="--ignore=$line "
 	done
+
+	ls "--color=tty" $ignores $@
+else 
+	ls "--color=tty" $@
 fi 
 
-ls "--color=tty" $options
 exit $?
