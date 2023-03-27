@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Convert DKB bank statements to readable .csv file for hledger
 # $1 input file name
 # $2 output file name
