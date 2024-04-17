@@ -14,6 +14,8 @@
 # PATH_SERVER="/mnt/folder"
 # MNT_PNT="/mnt/folder"
 
+OPTIONS="ServerAliveInterval=5"
+
 # Search for config files
 if [ -f "$HOME/.config/automount/automount.conf" ] ; then
 	source "$HOME/.config/automount/automount.conf" 
@@ -38,13 +40,12 @@ test_mountpoint () {
 
 # Mount locally
 mount_local () {
-# 	sshfs $USERNAME@$HOST_LOCAL:$PATH_SERVER $MNT_PNT -o ServerAliveInterval=1,ServerAliveCountMax=15 -p $PORT_LOCAL &> /dev/null
- 	sshfs $USERNAME@$HOST_LOCAL:$PATH_SERVER $MNT_PNT -o ServerAliveInterval=1,ServerAliveCountMax=15 -p $PORT_LOCAL
+ 	sshfs $USERNAME@$HOST_LOCAL:$PATH_SERVER $MNT_PNT -p $PORT_LOCAL -o $OPTIONS
 }
 
 # Mount remote
 mount_remote () {
-	sshfs $USERNAME@$HOST_REMOTE:$PATH_SERVER $MNT_PNT -o ServerAliveInterval=1,ServerAliveCountMax=15 -p $PORT_REMOTE &> /dev/null
+	sshfs $USERNAME@$HOST_REMOTE:$PATH_SERVER $MNT_PNT -p $PORT_REMOTE -o $OPTIONS
 }
 
 case $1 in 
@@ -101,7 +102,7 @@ case $1 in
 		exit 0
 		;;
 	*)
-		echo "No option given"
+		echo "No valid option given"
 		exit 1
 		;;
 esac
