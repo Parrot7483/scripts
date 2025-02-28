@@ -35,11 +35,6 @@ if ! command -v magick &> /dev/null; then
 fi
 
 # Apply "scanned" effects: blur and noise
-# magick convert -density 140 "$INPUT_PDF" -rotate "$([ $((RANDOM % 2)) -eq 1 ] && echo -)0.$(($RANDOM % 4 + 5))" -attenuate 0.1 +noise Multiplicative -flatten -attenuate 0.01 +noise Multiplicative -sharpen 0x1.0 -colorspace Gray "$OUTPUT_PDF"
-# Apply "scanned" effects: blur and noise
-# magick convert -density 140 "$INPUT_PDF" -rotate "$([ $((RANDOM % 2)) -eq 1 ] && echo -)0.$((RANDOM % 4 + 5))" -attenuate 0.1 +noise Multiplicative -flatten -attenuate 0.01 +noise Multiplicative -sharpen 0x1.0 -colorspace Gray "$OUTPUT_PDF"
-
-# Apply "scanned" effects: blur and noise
 magick -density 140 "$INPUT_PDF" \
   -rotate "$([ $((RANDOM % 2)) -eq 1 ] && echo -)0.$((RANDOM % 4 + 5))" \
   -attenuate 0.1 +noise Multiplicative \
