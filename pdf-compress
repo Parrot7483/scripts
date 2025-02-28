@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Compress a PDF using Ghostscript
 # $1 input file name
 # $2 output file name
