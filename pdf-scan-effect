@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# A script to apply a scanned effect to a PDF.
+# This script takes two arguments: the input PDF and the output PDF.
+# It applies scanned effects (blur, noise, rotation),
+
+# Exit on any command failure, undefined variables, or other errors
+set -euo pipefail
+
+# Check if the correct number of arguments is provided
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 input.pdf output.pdf"
+  exit 1
+fi
+
+# Input and output file paths
+INPUT_PDF="$1"
+OUTPUT_PDF="$2"
+
+# Ensure the input PDF file exists
+if [ ! -f "$INPUT_PDF" ]; then
+  echo "Error: Input file '$INPUT_PDF' does not exist."
+  exit 1
+fi
+
+# Ensure output directory exists
+if [ ! -d "$(dirname "$OUTPUT_PDF")" ]; then
+  echo "Warning: Output directory '$OUTPUT_DIR' does not exist."
+  mkdir -p "$OUTPUT_DIR"
+fi
+
+# Ensure magick is installed
+if ! command -v magick &> /dev/null; then
+  echo "Error: 'magick' is not installed. Please install it before running the script."
+  exit 1
+fi
+
+# Apply "scanned" effects: blur and noise
+# magick convert -density 140 "$INPUT_PDF" -rotate "$([ $((RANDOM % 2)) -eq 1 ] && echo -)0.$(($RANDOM % 4 + 5))" -attenuate 0.1 +noise Multiplicative -flatten -attenuate 0.01 +noise Multiplicative -sharpen 0x1.0 -colorspace Gray "$OUTPUT_PDF"
+# Apply "scanned" effects: blur and noise
+# magick convert -density 140 "$INPUT_PDF" -rotate "$([ $((RANDOM % 2)) -eq 1 ] && echo -)0.$((RANDOM % 4 + 5))" -attenuate 0.1 +noise Multiplicative -flatten -attenuate 0.01 +noise Multiplicative -sharpen 0x1.0 -colorspace Gray "$OUTPUT_PDF"
+
+# Apply "scanned" effects: blur and noise
+magick -density 140 "$INPUT_PDF" \
+  -rotate "$([ $((RANDOM % 2)) -eq 1 ] && echo -)0.$((RANDOM % 4 + 5))" \
+  -attenuate 0.1 +noise Multiplicative \
+  -flatten \
+  -attenuate 0.01 +noise Multiplicative \
+  -sharpen 0x1.0 \
+  -colorspace Gray \
+  "$OUTPUT_PDF"
+
+# Print both input and output file names relative to home directory
+echo "Scanned effect applied to '$(realpath --relative-to="$HOME" "$INPUT_PDF")', output saved to '$(realpath --relative-to="$HOME" "$OUTPUT_PDF")'"
+
